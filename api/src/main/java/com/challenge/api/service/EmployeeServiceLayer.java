@@ -62,7 +62,8 @@ public class EmployeeServiceLayer {
         return employees;
     }
 
-    // Retrieves an Employee by their UUID. If no Employee exists with the provided UUID, throws a 404 Not Found exception.
+    // Retrieves an Employee by their UUID.
+    // If no Employee exists with the provided UUID, throws a 404 Not Found exception.
     public Employee getEmployeeByUuid(UUID uuid) {
         return employees.stream()
                 .filter(employee -> employee.getUuid().equals(uuid))
@@ -71,8 +72,24 @@ public class EmployeeServiceLayer {
     }
 
     // Creates a new employee.
+    // Validates that required fields are present before creating.
     public Employee createEmployee(EmployeeImplementation newEmployee) {
+        if (newEmployee.getFirstName() == null
+                || newEmployee.getFirstName().isBlank()
+                || newEmployee.getLastName() == null
+                || newEmployee.getLastName().isBlank()
+                || newEmployee.getEmail() == null
+                || newEmployee.getEmail().isBlank()
+                || newEmployee.getJobTitle() == null
+                || newEmployee.getJobTitle().isBlank()
+                || newEmployee.getSalary() == null
+                || newEmployee.getAge() == null
+                || newEmployee.getContractHireDate() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing required employee fields");
+        }
+
         newEmployee.setUuid(UUID.randomUUID());
+        newEmployee.setFullName(newEmployee.getFirstName() + " " + newEmployee.getLastName());
         employees.add(newEmployee);
         return newEmployee;
     }
