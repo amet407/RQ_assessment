@@ -15,6 +15,8 @@ public class EmployeeServiceLayer {
 
     private final List<Employee> employees = new ArrayList<>();
 
+    // Generate mock employees.
+    // In a real application, this data would be retrieved from a database.
     public EmployeeServiceLayer() {
         EmployeeImplementation employee1 = new EmployeeImplementation();
         employee1.setUuid(UUID.randomUUID());
@@ -54,10 +56,13 @@ public class EmployeeServiceLayer {
         employees.add(employee3);
     }
 
+    // Retrieves all mock employees.
+    // In a real application, this method would query a database for all Employee records.
     public List<Employee> getAllEmployees() {
         return employees;
     }
 
+    // Retrieves an Employee by their UUID. If no Employee exists with the provided UUID, throws a 404 Not Found exception.
     public Employee getEmployeeByUuid(UUID uuid) {
         return employees.stream()
                 .filter(employee -> employee.getUuid().equals(uuid))
@@ -65,6 +70,7 @@ public class EmployeeServiceLayer {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found"));
     }
 
+    // Creates a new employee.
     public Employee createEmployee(EmployeeImplementation newEmployee) {
         newEmployee.setUuid(UUID.randomUUID());
         employees.add(newEmployee);
